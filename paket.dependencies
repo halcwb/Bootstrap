@@ -1,0 +1,7 @@
+source https://nuget.org/api/v2
+// build
+nuget Fake
+
+// project
+
+// test
