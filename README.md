@@ -8,6 +8,7 @@ Bootstrapping can be started by running:
 
 ## Bootstrapping
 The bootstrap.fsx does the following:
+
 1. Check if a paket.exe exists
 2. Download the paket.exe if not
 3. Use the paket.exe to install dependencies
