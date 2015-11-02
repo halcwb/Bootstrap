@@ -1,6 +1,10 @@
 source https://nuget.org/api/v2
+
 // build
 nuget Fake
+nuget SourceLink.Fake
+
+github fsharp/FAKE modules/Octokit/Octokit.fsx
 
 // project
 

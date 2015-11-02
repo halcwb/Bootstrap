@@ -26,5 +26,3 @@ if not (System.IO.File.Exists paketFile) then
 #r "./.paket/paket.exe"
 Paket.Dependencies.Install (System.IO.File.ReadAllText "paket.dependencies")
 #endif
-
-//#load "build.fsx"
