@@ -23,8 +23,9 @@
 # Add dependencies file
 !paket.dependencies
 
-# Add yml file to ci on appveyor
+# Add yml files to ci on appveyor and travis
 !appveyor.yml
+!.travis.yml
 
 # Add source files
 !src/**/*.fs
