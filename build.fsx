@@ -1,6 +1,8 @@
 // --------------------------------------------------------------------------------------
 // FAKE build script
 // --------------------------------------------------------------------------------------
+#I "packages/FAKE/tools/"
+#I "packages/"
 
 #r @"packages/FAKE/tools/FakeLib.dll"
 open Fake
@@ -18,6 +20,7 @@ open SourceLink
 
 #load "scripts/Travis.fsx"
 
+System.Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
 // --------------------------------------------------------------------------------------
 // START TODO: Provide project-specific details below
 // --------------------------------------------------------------------------------------
@@ -79,19 +82,18 @@ let (|Fsproj|Csproj|Vbproj|) (projFileName:string) =
     | _                           -> failwith (sprintf "Project file %s not supported. Unknown project type." projFileName)
 
 
-
-Target "Test" (fun _ ->
-    trace "Testing stuff..."
+Target "Integrate" (fun _ ->
+    printfn "Starting to integrate"
+    let lastBuild = Travis.getLatestBuild project
+    match lastBuild with
+    | Some b -> 
+        printfn "Last build was at %A and %s" b.started_at b.state
+        Git.Branches.checkoutBranch "." "master"
+        Git.Merge.merge "." Git.Merge.FastForwardFlag "develop"
+        Git.Branches.checkoutBranch "." "develop"
+    | None   -> 
+        printfn "No last build, still building?"
 )
-
-Target "Deploy" (fun _ ->
-    trace "Heavy deploy action"
-)
-
-"Test"            // define the dependencies
-   ==> "Deploy"
-
-Run "Deploy"
 
 
 (*
