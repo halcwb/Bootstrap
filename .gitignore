@@ -14,7 +14,7 @@
 # Add fsx files
 !*.fsx
 
-# Add build commands
+# Add build files
 !build.*
 
 # Add proc file
@@ -28,10 +28,5 @@
 !.travis.yml
 
 # Add source files
-!scripts/**/*.fsx
-!src/**/*.fs
-!src/**/*.fsx
-!src/**/*.cs
-!tests/**/*.fs
-!tests/**/*.fsx
-!tests/**/*.cs
+!/scripts/
+!/scripts/*.fsx
