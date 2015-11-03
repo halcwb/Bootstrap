@@ -5,15 +5,9 @@ open Newtonsoft.Json
 type Build = 
     {
       commit_id: int
+      number: string
       duration: int
       finished_at: System.DateTime
-      id: int
-      job_ids: int[]
-      number: string
-      pull_request: bool
-      pull_request_number: string
-      pull_request_title: string
-      repository_id: int
       started_at: System.DateTime
       state: string
     }
@@ -33,11 +27,11 @@ let getLatestBuild project =
     wr.Accept <- "application/vnd.travis-ci.2+json"
     let resp = wr.GetResponse()
     use reader = new System.IO.StreamReader(resp.GetResponseStream())
-
-    let builds = JsonConvert.DeserializeObject<Builds>(reader.ReadToEnd())
+    let json = reader.ReadToEnd()
+    let builds = JsonConvert.DeserializeObject<Builds>(json)
     builds.builds.[0] |> Some
   with 
-  | _ -> None
+  | e -> printfn "Failed with %A" e; None
 
 printfn "%A" (getLatestBuild "Bootstrap")
 
