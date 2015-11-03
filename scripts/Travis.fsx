@@ -25,16 +25,19 @@ type Builds =
     }
 
 let getLatestBuild project =
-  let url = sprintf "http://api.travis-ci.org/repos/halcwb/%s/builds" project
-  let wr = System.Net.HttpWebRequest.Create(url) :?> System.Net.HttpWebRequest
-  wr.Host <- "api.travis-ci.org"
-  wr.UserAgent <- project
-  wr.Accept <- "application/vnd.travis-ci.2+json"
-  let resp = wr.GetResponse()
-  let reader = new System.IO.StreamReader(resp.GetResponseStream())
+  try
+    let url = sprintf "http://api.travis-ci.org/repos/halcwb/%s/builds" project
+    let wr = System.Net.HttpWebRequest.Create(url) :?> System.Net.HttpWebRequest
+    wr.Host <- "api.travis-ci.org"
+    wr.UserAgent <- project
+    wr.Accept <- "application/vnd.travis-ci.2+json"
+    let resp = wr.GetResponse()
+    use reader = new System.IO.StreamReader(resp.GetResponseStream())
 
-  let builds = JsonConvert.DeserializeObject<Builds>(reader.ReadToEnd())
-  builds.builds.[0]
+    let builds = JsonConvert.DeserializeObject<Builds>(reader.ReadToEnd())
+    builds.builds.[0] |> Some
+  with 
+  | _ -> None
 
 printfn "%A" (getLatestBuild "Bootstrap")
 
