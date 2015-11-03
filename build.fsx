@@ -16,6 +16,8 @@ open System.IO
 open SourceLink
 #endif
 
+#load "scripts/Travis.fsx"
+
 // --------------------------------------------------------------------------------------
 // START TODO: Provide project-specific details below
 // --------------------------------------------------------------------------------------

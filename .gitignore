@@ -28,6 +28,10 @@
 !.travis.yml
 
 # Add source files
+!scripts/**/*.fsx
 !src/**/*.fs
 !src/**/*.fsx
 !src/**/*.cs
+!tests/**/*.fs
+!tests/**/*.fsx
+!tests/**/*.cs
