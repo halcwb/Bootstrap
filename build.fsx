@@ -85,8 +85,8 @@ Target "Integrate" (fun _ ->
     printfn "Starting to integrate"
     let lastBuild = Travis.getLatestBuild project
     match lastBuild with
-    | Some b -> 
-        printfn "Last build was at %A and %s" b.started_at b.state
+    | Some (id, dt, br, st) -> 
+        printfn "Last build was at %A and %s" dt st
         Git.Branches.checkoutBranch "." "master"
         Git.Merge.merge "." Git.Merge.FastForwardFlag "develop"
         Git.Branches.checkoutBranch "." "develop"
