@@ -34,4 +34,4 @@
 # Add documentation
 !/docs/
 !/docs/content/
-!/docs/content/*.md
+!/docs/content/*.fsx
