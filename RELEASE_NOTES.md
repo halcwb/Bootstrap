@@ -1,3 +1,7 @@
+### 0.0.3-beta - November 6 2015
+* Implemented a specific integration task in the build script
+
+
 ### 0.0.2-beta - November 3 2015
 * Improved bootstrap to use the latest version of paket
 

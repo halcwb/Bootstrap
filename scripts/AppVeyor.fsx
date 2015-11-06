@@ -27,12 +27,15 @@ type Result =
 
 
 let getLatestBuild project =
-    let url = sprintf "https://ci.appveyor.com/api/projects/%s/%s" "halcwb" project
-    let wr = System.Net.HttpWebRequest.Create(url) :?> System.Net.HttpWebRequest
-    wr.Accept <- "application/json"
-    let resp = wr.GetResponse()
-    use reader = new System.IO.StreamReader(resp.GetResponseStream())
-    let json = reader.ReadToEnd()
-    let build = JsonConvert.DeserializeObject<Result>(json)
-    build.build.commitId, build.build.started, build.build.branch, build.build.status
+    try
+        let url = sprintf "https://ci.appveyor.com/api/projects/%s/%s" "halcwb" project
+        let wr = System.Net.HttpWebRequest.Create(url) :?> System.Net.HttpWebRequest
+        wr.Accept <- "application/json"
+        let resp = wr.GetResponse()
+        use reader = new System.IO.StreamReader(resp.GetResponseStream())
+        let json = reader.ReadToEnd()
+        let build = JsonConvert.DeserializeObject<Result>(json)
+        (build.build.commitId, build.build.started, build.build.branch, build.build.status) |> Some
+    with
+    | e -> printfn "%A" e; None
 

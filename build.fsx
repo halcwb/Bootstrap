@@ -18,6 +18,7 @@ open SourceLink
 #endif
 
 #load "scripts/Travis.fsx"
+#load "scripts/AppVeyor.fsx"
 
 System.Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
 // --------------------------------------------------------------------------------------
@@ -82,16 +83,33 @@ let (|Fsproj|Csproj|Vbproj|) (projFileName:string) =
 
 
 Target "Integrate" (fun _ ->
+    let master   = "master"
+    let develop  = "develop"
+    let currDir  = __SOURCE_DIRECTORY__
+    let traVsucc = "passed"
+    let appVsucc = "success"
+    let currId   = Git.Information.getCurrentSHA1 currDir   
+
     printfn "Starting to integrate"
-    let lastBuild = Travis.getLatestBuild project
-    match lastBuild with
-    | Some (id, dt, br, st) -> 
-        printfn "Last build was at %A and %s" dt st
-        Git.Branches.checkoutBranch "." "master"
-        Git.Merge.merge "." Git.Merge.FastForwardFlag "develop"
-        Git.Branches.checkoutBranch "." "develop"
-    | None   -> 
-        printfn "No last build, still building?"
+    if Git.Information.isCleanWorkingCopy currDir |> not then 
+        printfn "Working copy is not clean, cannot integrate"
+    else
+        // Get the latest mono build
+        let lastTravisBuild   = Travis.getLatestBuild project
+        // Get the latest .Net build
+        let lastAppVeyorBuild = AppVeyor.getLatestBuild project
+
+        // Check whether the builds passed
+        match lastTravisBuild, lastAppVeyorBuild with
+        | Some (id, dt, br, st), Some (id', dt', br', st') -> 
+            printfn "curr: %s, travis: %s, appveyor; %s" currId id id'
+            if id = currId && id = id' && br = br' && st = traVsucc &&   st' = appVsucc then
+                printfn "Last build was at %A and %s" dt st
+                Git.Branches.checkoutBranch currDir master
+                Git.Merge.merge currDir Git.Merge.FastForwardFlag develop
+                Git.Branches.checkoutBranch currDir develop
+        | _   -> 
+            printfn "No passed last build, cannot integrate"
 )
 
 
@@ -351,9 +369,11 @@ Target "BuildPackage" DoNothing
 
 // --------------------------------------------------------------------------------------
 // Run all targets by default. Invoke 'build <Target>' to override
+*)
 
 Target "All" DoNothing
 
+(*
 "Clean"
   ==> "AssemblyInfo"
   ==> "Build"
@@ -390,5 +410,5 @@ Target "All" DoNothing
   ==> "PublishNuget"
   ==> "Release"
 
-RunTargetOrDefault "All"
 *)
+RunTargetOrDefault "All"

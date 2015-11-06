@@ -44,5 +44,4 @@ let getLatestBuild project =
   with 
   | e -> printfn "Failed with %A" e; None
 
-printfn "%A" (getLatestBuild "Bootstrap")
 
