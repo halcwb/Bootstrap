@@ -110,8 +110,10 @@ Target "Integrate" (fun _ ->
                 Git.Merge.merge currDir Git.Merge.FastForwardFlag develop
                 Git.Branches.pushBranch currDir remote master
                 Git.Branches.checkoutBranch currDir develop
+            else 
+                failwith <| sprintf "Last build did not pass on %s" (if st = traVsucc then "AppVeyor" else "Travis")
         | _   -> 
-            failwith "No passed last build, cannot integrate"
+            failwith "Cannot get last build, cannot integrate"
 )
 
 
