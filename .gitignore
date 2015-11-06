@@ -35,3 +35,7 @@
 !/docs/
 !/docs/content/
 !/docs/content/*.fsx
+!/docs/tools/
+!/docs/tools/*.fsx
+!/docs/tools/templates/
+!/docs/tools/templates/*.cshtml
