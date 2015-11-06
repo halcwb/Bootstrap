@@ -30,3 +30,8 @@
 # Add source files
 !/scripts/
 !/scripts/*.fsx
+
+# Add documentation
+!/docs/
+!/docs/content/
+!/docs/content/*.md

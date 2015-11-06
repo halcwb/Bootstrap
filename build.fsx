@@ -117,7 +117,7 @@ Target "Integrate" (fun _ ->
 )
 
 
-(*
+
 // Generate assembly info files with the right version & up-to-date information
 Target "AssemblyInfo" (fun _ ->
     let getAssemblyInfoAttributes projectName =
@@ -169,21 +169,25 @@ Target "CleanDocs" (fun _ ->
 // Build library & test project
 
 Target "Build" (fun _ ->
-    !! solutionFile
-    |> MSBuildRelease "" "Rebuild"
-    |> ignore
+    if solutionFile <> "" then
+        !! solutionFile
+        |> MSBuildRelease "" "Rebuild"
+        |> ignore
 )
 
 // --------------------------------------------------------------------------------------
 // Run the unit tests using test runner
 
 Target "RunTests" (fun _ ->
-    !! testAssemblies
-    |> NUnit (fun p ->
-        { p with
-            DisableShadowCopy = true
-            TimeOut = TimeSpan.FromMinutes 20.
-            OutputFile = "TestResults.xml" })
+    match !! testAssemblies with
+    | tests when tests |> Seq.length > 0 ->
+        tests
+        |> NUnit (fun p ->
+            { p with
+                DisableShadowCopy = true
+                TimeOut = TimeSpan.FromMinutes 20.
+                OutputFile = "TestResults.xml" })
+    | _ -> ()
 )
 
 #if MONO
@@ -373,11 +377,11 @@ Target "BuildPackage" DoNothing
 
 // --------------------------------------------------------------------------------------
 // Run all targets by default. Invoke 'build <Target>' to override
-*)
+
 
 Target "All" DoNothing
 
-(*
+
 "Clean"
   ==> "AssemblyInfo"
   ==> "Build"
@@ -414,5 +418,5 @@ Target "All" DoNothing
   ==> "PublishNuget"
   ==> "Release"
 
-*)
+
 RunTargetOrDefault "All"
