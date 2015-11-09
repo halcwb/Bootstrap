@@ -31,6 +31,9 @@
 !/scripts/
 !/scripts/*.fsx
 
+# Ignore generated documentation files
+/docs/content/**/*.md
+
 # Add documentation
 !/docs/
 !/docs/content/
@@ -39,3 +42,5 @@
 !/docs/tools/*.fsx
 !/docs/tools/templates/
 !/docs/tools/templates/*.cshtml
+!/docs/files/
+!/docs/files/img/*.png
