@@ -76,7 +76,9 @@ subDirectories (directoryInfo templates)
 
 // Copy static files and CSS + JS from F# Formatting
 let copyFiles () =
-  CopyRecursive files output true |> Log "Copying file: "
+  if directoryExists files then 
+    CopyRecursive files output true |> Log "Copying file: "
+
   ensureDirectory (output @@ "content")
   CopyRecursive (formatting @@ "styles") (output @@ "content") true 
     |> Log "Copying styles and scripts: "
@@ -149,5 +151,5 @@ copyFiles()
 buildDocumentation()
 #endif
 #if REFERENCE
-//buildReference()
+buildReference()
 #endif
