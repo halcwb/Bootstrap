@@ -14,8 +14,9 @@
 # Add fsx files
 !*.fsx
 
-# Add build files
-!build.*
+# Add command and batch files
+!*.cmd
+!*.sh
 
 # Add proc file
 !Procfile
