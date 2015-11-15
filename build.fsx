@@ -345,7 +345,7 @@ Target "ReleaseDocs" (fun _ ->
         runGitCommand "." "rm -rf" |> ignore
         CreateFile "index.html"
         runGitCommand "." "add ." |> ignore
-        runGitCommand "push origin gh-pages" |> tracefn "%A"
+        runGitCommand "." "push origin gh-pages" |> tracefn "%A"
 
         Branches.checkoutBranch "." "develop"
         failwith "Run ReleaseDocs again"
