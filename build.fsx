@@ -342,7 +342,7 @@ Target "ReleaseDocs" (fun _ ->
         printfn "No gh-pages branch, going to create one"
         
         runGitCommand "." "checkout --orphan gh-pages" |> tracefn "%A"
-        runGitCommand "." "rm -rf" |> ignore
+        runGitCommand "." "rm -rf ." |> ignore
         CreateFile "index.html"
         runGitCommand "." "add ." |> ignore
         runGitCommand "." "push origin gh-pages" |> tracefn "%A"
