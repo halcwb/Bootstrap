@@ -336,12 +336,18 @@ Target "ReleaseDocs" (fun _ ->
     CleanDir tempDocsDir
     
     try
-    Repository.cloneSingleBranch "" (gitHome + "/" + gitName) "gh-pages" tempDocsDir
+        Repository.cloneSingleBranch "" (gitHome + "/" + gitName) "gh-pages" tempDocsDir
     with
     | _ ->
         printfn "No gh-pages branch, going to create one"
-        runGitCommand tempDocsDir "checkout --orphan gh-pages" |> tracefn "%A"
-        runGitCommand tempDocsDir "rm -rf" |> ignore
+        
+        runGitCommand "." "checkout --orphan gh-pages" |> tracefn "%A"
+        runGitCommand "." "rm -rf" |> ignore
+        runGitCommand "." "add -A" |> ignore
+        runGitCommand "push origin gh-pages" |> tracefn "%A"
+
+        Branches.checkoutBranch "." "develop"
+        failwith "Run ReleaseDocs again"
 
     CopyRecursive "docs/output" tempDocsDir true |> tracefn "%A"
     StageAll tempDocsDir
