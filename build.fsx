@@ -330,26 +330,21 @@ Target "AddLangDocs" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Release Scripts
 
-let forceStageFile repositoryDir file =
-    file 
-    |> fixPath
-    |> sprintf "add -f \"%s\""
-    |> runGitCommand repositoryDir    
 
 Target "ReleaseDocs" (fun _ ->
     let tempDocsDir = "temp/gh-pages"
     CleanDir tempDocsDir
     
-    Repository.cloneSingleBranch "" (gitHome + "/" + gitName + ".git") "gh-pages" tempDocsDir
-    if Branches.getAllBranches tempDocsDir |> List.exists ((=) "gh-pages") |> not then 
+    try
+    Repository.cloneSingleBranch "" (gitHome + "/" + gitName) "gh-pages" tempDocsDir
+    with
+    | _ ->
         printfn "No gh-pages branch, going to create one"
-        runGitCommand tempDocsDir "branch gh-pages" |> ignore
+        runGitCommand tempDocsDir "checkout --orphan gh-pages" |> tracefn "%A"
+        runGitCommand tempDocsDir "rm -rf" |> ignore
 
-    let toStage = CopyRecursive "docs/output" tempDocsDir true 
-    toStage |> List.iter(fun f ->
-        let s, _, _ = forceStageFile tempDocsDir f
-        if s then printfn "Added %s" f
-        else failwith "Could not add %f" f)
+    CopyRecursive "docs/output" tempDocsDir true |> tracefn "%A"
+    StageAll tempDocsDir
 
     Git.Commit.Commit tempDocsDir (sprintf "Update generated documentation for version %s" release.NugetVersion)
     Branches.push tempDocsDir
