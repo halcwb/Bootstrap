@@ -1,2 +1,18 @@
-"C:\Program Files (x86)\Microsoft SDKs\F#\3.1\Framework\v4.0\fsi.exe" --define:BOOTSTRAP bootstrap.fsx
-"packages/FAKE/tools/FAKE.exe" build.fsx %*
+@echo off
+cls
+
+.paket\paket.bootstrapper.exe
+if errorlevel 1 (
+  exit /b %errorlevel%
+)
+
+.paket\paket.exe restore
+if errorlevel 1 (
+  exit /b %errorlevel%
+)
+
+IF NOT EXIST build.fsx (
+  .paket\paket.exe update
+  packages\FAKE\tools\FAKE.exe init.fsx
+)
+packages\FAKE\tools\FAKE.exe build.fsx %*
