@@ -337,6 +337,12 @@ Target "ReleaseDocs" (fun _ ->
     
     try
         Repository.cloneSingleBranch "" (gitHome + "/" + gitName) "gh-pages" tempDocsDir
+
+        CopyRecursive "docs/output" tempDocsDir true |> tracefn "%A"
+        StageAll tempDocsDir
+
+        Git.Commit.Commit tempDocsDir (sprintf "Update generated documentation for version %s" release.NugetVersion)
+        Branches.push tempDocsDir
     with
     | _ ->
         printfn "No gh-pages branch, going to create one"
@@ -349,12 +355,6 @@ Target "ReleaseDocs" (fun _ ->
 
         Branches.checkoutBranch "." "develop"
         failwith "Run ReleaseDocs again"
-
-    CopyRecursive "docs/output" tempDocsDir true |> tracefn "%A"
-    StageAll tempDocsDir
-
-    Git.Commit.Commit tempDocsDir (sprintf "Update generated documentation for version %s" release.NugetVersion)
-    Branches.push tempDocsDir
 )
 
 #load "paket-files/fsharp/FAKE/modules/Octokit/Octokit.fsx"
