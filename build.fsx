@@ -347,15 +347,18 @@ Target "ReleaseDocs" (fun _ ->
     | _ ->
         printfn "No gh-pages branch, going to create one"
         
-        runGitCommand "." "checkout --orphan gh-pages" |> tracefn "%A"
-        runGitCommand "." "rm -rf ." |> ignore
+        runGitCommand "" "checkout --orphan gh-pages" |> tracefn "%A"
+        runGitCommand "" "rm -rf ." |> tracefn "%A"
         CreateFile "index.html"
-        runGitCommand "." "add ." |> ignore
-        runGitCommand "." "push origin gh-pages" |> tracefn "%A"
+        StageFile "" "index.html" |> tracefn "%A"
+        Git.Commit.Commit "" "Added gh-pages branch" |> tracefn "%A"
+        Branches.pushBranch "" "origin" |> tracefn "%A"
 
-        Branches.checkoutBranch "." "develop"
+        Branches.checkoutBranch "" "develop"
+        runGitCommand "rm -f index.html" |> ignore
         failwith "Run ReleaseDocs again"
 )
+
 
 #load "paket-files/fsharp/FAKE/modules/Octokit/Octokit.fsx"
 open Octokit
