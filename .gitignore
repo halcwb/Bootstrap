@@ -27,6 +27,7 @@
 
 # Add dependencies file
 !paket.dependencies
+!paket.lock
 
 # Add yml files to ci on appveyor and travis
 !appveyor.yml
