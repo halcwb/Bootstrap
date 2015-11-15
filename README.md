@@ -1,5 +1,5 @@
 # Bootstrap
-A scaffolding setup to bootstrap a `.net` project to get up and running. 
+A scaffolding setup to bootstrap a `.net` project to get up and running. This project is heavily influence by [ProjectScaffold](https://github.com/fsprojects/ProjectScaffold).
 
 ## Build Status
 
@@ -10,10 +10,10 @@ Mono | .NET
 
 ## Principles
 
-1. The master branch always builds on both mono and .net
+1. The master branch always builds on both mono and .net and contains the last good code
 2. All tests in the master branch always pass
-3. The master branch is only merged in from the develop branch, after the above is ensured, i.e. the develop branch builds and all tests pass
-4. Build is completely automated
+3. The master branch is merged with the develop branch only if build passes on the ci machines (Travis and Appveyor) and all tests pass
+4. Builds are completely automated
 5. Continuous Integration is completely automated
 6. Documentation is completely automated
 7. Publishing to nuget is completely automated
@@ -26,28 +26,27 @@ Bootstrapping can be started by running:
 * `build.cmd` on windows systems
 
 ## Bootstrapping
-The bootstrap.fsx does the following:
+Will do the following:
 
-1. Check if a paket.exe exists
-2. Download the paket.exe if not
-3. Use the paket.exe to install dependencies
+1. Use `.paket/paket.bootstrapper.exe` to fetch the latest `paket` release.
+2. Install all project dependencies using `paket.dependencies` with versions as specified by the `paket.lock` file
 
 ## Building
-TODO
+Builds the project using the `build.fsx` file.
 
 ## Testing
-TODO
+Run the `test` targets in the `build.fsx` file.
 
 ## Continuous integration
-This setup assumes that all development happens on the develop branch. There is a specific integration target that can be run by `./integrate.sh` or `integrate.cmd`:
+This setup assumes that all development happens on the develop branch. There is a specific integration target that can be run by `./build.sh integrate` or `build.cmd integrate`:
 
 1. First it checks whether all changes are commited, i.e. the current repos is clean.
 2. Then the latest Appveyor (.net) and Travis (mono) builds are checked whether they passed.
-3. Then the develop branch is merged with the master branch and pushed to GitHub.
+3. Then the develop branch is merged with the master branch and the master branch is pushed to GitHub.
 4. Finally the develop branch is checkout out to continue development
 
 ## Documentation
-TODO
+All documentation is automatically generated using the [FSharp.Formatting](https://github.com/tpetricek/FSharp.Formatting) project.
 
 ## Publishing
 TODO
