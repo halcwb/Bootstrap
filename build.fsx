@@ -333,7 +333,13 @@ Target "AddLangDocs" (fun _ ->
 Target "ReleaseDocs" (fun _ ->
     let tempDocsDir = "temp/gh-pages"
     CleanDir tempDocsDir
-    Repository.cloneSingleBranch "" (gitHome + "/" + gitName + ".git") "gh-pages" tempDocsDir
+    
+    try
+        Repository.cloneSingleBranch "" (gitHome + "/" + gitName + ".git") "gh-pages" tempDocsDir
+    with
+    | _ -> 
+        printfn "No remote gh-pages branch yet, going to create one"
+        Branches.createBranch "." "gh-pages" "HEAD"
 
     CopyRecursive "docs/output" tempDocsDir true |> tracefn "%A"
     StageAll tempDocsDir
