@@ -343,7 +343,8 @@ Target "ReleaseDocs" (fun _ ->
         
         runGitCommand "." "checkout --orphan gh-pages" |> tracefn "%A"
         runGitCommand "." "rm -rf" |> ignore
-        runGitCommand "." "add -A" |> ignore
+        CreateFile "index.html"
+        runGitCommand "." "add ." |> ignore
         runGitCommand "push origin gh-pages" |> tracefn "%A"
 
         Branches.checkoutBranch "." "develop"
