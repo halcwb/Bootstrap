@@ -21,6 +21,10 @@
 # Add proc file
 !Procfile
 
+# Add paket bootstrapper
+!/.paket/
+!/.paket/paket.bootstrapper.exe
+
 # Add dependencies file
 !paket.dependencies
 
