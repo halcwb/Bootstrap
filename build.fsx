@@ -335,7 +335,7 @@ Target "ReleaseDocs" (fun _ ->
     let tempDocsDir = "temp/gh-pages"
     CleanDir tempDocsDir
     
-    try
+    if Branches.getAllBranches "" |> List.exists ((=) "remotes/origin/gh-pages") then
         Repository.cloneSingleBranch "" (gitHome + "/" + gitName) "gh-pages" tempDocsDir
 
         CopyRecursive "docs/output" tempDocsDir true |> tracefn "%A"
@@ -343,19 +343,20 @@ Target "ReleaseDocs" (fun _ ->
 
         Git.Commit.Commit tempDocsDir (sprintf "Update generated documentation for version %s" release.NugetVersion)
         Branches.push tempDocsDir
-    with
-    | _ ->
+    else
         printfn "No gh-pages branch, going to create one"
-        
-        runGitCommand "" "checkout --orphan gh-pages" |> tracefn "%A"
-        runGitCommand "" "rm -rf ." |> tracefn "%A"
+        let currentBranch = (getGitResult "" "rev-parse --abbrev-ref HEAD").[0]
+        // Create a clean gh-pages branch
+        gitCommand "" "checkout --orphan gh-pages" |> tracefn "%A"
+        gitCommand "" "rm -rf ." |> tracefn "%A"
+        // Add the index file to enable a push of the branch
         CreateFile "index.html"
         StageFile "" "index.html" |> tracefn "%A"
         Git.Commit.Commit "" "Added gh-pages branch" |> tracefn "%A"
-        Branches.pushBranch "" "origin" |> tracefn "%A"
-
-        Branches.checkoutBranch "" "develop"
-        runGitCommand "rm -f index.html" |> ignore
+        Branches.pushBranch "" "origin" "gh-pages" |> tracefn "%A"
+        // Restore the current branch
+        Branches.checkoutBranch "" currentBranch
+        gitCommand "rm -f index.html" |> ignore
         failwith "Run ReleaseDocs again"
 )
 
