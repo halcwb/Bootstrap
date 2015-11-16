@@ -61,7 +61,7 @@ let gitOwner = "halcwb"
 let gitHome = "https://github.com/" + gitOwner
 
 // The name of the project on GitHub
-let gitName = "Bootstap.git"
+let gitName = "Bootstrap.git"
 
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" ("https://raw.github.com/" + gitOwner + "/" + gitName)
