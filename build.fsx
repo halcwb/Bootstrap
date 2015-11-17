@@ -83,10 +83,13 @@ let (|Fsproj|Csproj|Vbproj|) (projFileName:string) =
     | _                           -> failwith (sprintf "Project file %s not supported. Unknown project type." projFileName)
 
 
+let currentBranch = (getGitResult "" "rev-parse --abbrev-ref HEAD").[0]
+
+
 Target "Integrate" (fun _ ->
     let master   = "master"
     let remote   = "origin"
-    let develop  = "develop"
+    let develop  = currentBranch
     let currDir  = __SOURCE_DIRECTORY__
     let traVsucc = "passed"
     let appVsucc = "success"
@@ -107,9 +110,14 @@ Target "Integrate" (fun _ ->
 //            printfn "curr: %s, travis: %s, appveyor; %s" currId id id'
             if id = currId && id = id' && br = br' && st = traVsucc &&   st' = appVsucc then
                 printfn "Last build was at %A and %s" dt st
+                // Update the master branch with the latest remote master
                 Git.Branches.checkoutBranch currDir master
+                Git.Branches.pull "" "origin" "master"
+                // Merge the master with the current development branch
                 Git.Merge.merge currDir Git.Merge.FastForwardFlag develop
+                // Update the remote master branch
                 Git.Branches.pushBranch currDir remote master
+                // Checkout the current development branch
                 Git.Branches.checkoutBranch currDir develop
             else 
                 failwith <| sprintf "Last build did not pass on %s" (if st = traVsucc then "AppVeyor" else "Travis")
@@ -346,7 +354,6 @@ Target "ReleaseDocs" (fun _ ->
         Branches.push tempDocsDir
     else
         printfn "No gh-pages branch, going to create one"
-        let currentBranch = (getGitResult "" "rev-parse --abbrev-ref HEAD").[0]
         // Create a clean gh-pages branch
         gitCommand "" "checkout --orphan gh-pages" |> tracefn "%A"
         gitCommand "" "rm -rf ." |> tracefn "%A"
