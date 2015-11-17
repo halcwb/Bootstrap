@@ -83,13 +83,13 @@ let (|Fsproj|Csproj|Vbproj|) (projFileName:string) =
     | _                           -> failwith (sprintf "Project file %s not supported. Unknown project type." projFileName)
 
 
-let currentBranch = (getGitResult "" "rev-parse --abbrev-ref HEAD").[0]
+let getCurrentBranch () = (getGitResult "" "rev-parse --abbrev-ref HEAD").[0]
 
 
 Target "Integrate" (fun _ ->
     let master   = "master"
     let remote   = "origin"
-    let develop  = currentBranch
+    let develop  = getCurrentBranch()
     let currDir  = __SOURCE_DIRECTORY__
     let traVsucc = "passed"
     let appVsucc = "success"
@@ -354,6 +354,7 @@ Target "ReleaseDocs" (fun _ ->
         Branches.push tempDocsDir
     else
         printfn "No gh-pages branch, going to create one"
+		let currentBranch = getCurrentBranch()
         // Create a clean gh-pages branch
         gitCommand "" "checkout --orphan gh-pages" |> tracefn "%A"
         gitCommand "" "rm -rf ." |> tracefn "%A"
