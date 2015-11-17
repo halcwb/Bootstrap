@@ -354,7 +354,7 @@ Target "ReleaseDocs" (fun _ ->
         Branches.push tempDocsDir
     else
         printfn "No gh-pages branch, going to create one"
-		let currentBranch = getCurrentBranch()
+        let currentBranch = getCurrentBranch()
         // Create a clean gh-pages branch
         gitCommand "" "checkout --orphan gh-pages" |> tracefn "%A"
         gitCommand "" "rm -rf ." |> tracefn "%A"
