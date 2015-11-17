@@ -61,7 +61,7 @@ This setup assumes that the current branch is a development branch. There is a s
 
 
 ## Documentation
-Documentation is automatically generated using the `.fsx` files and the `.md` files in the `docs/content/` folder. How to create additional information is described [here](https//tpetricek.github.io/FSharp.Formatting).
+Documentation is automatically generated using the `.fsx` files and the `.md` files in the `docs/content/` folder. How to create additional information is described [here](https://tpetricek.github.io/FSharp.Formatting).
 
 
 ## Publishing
