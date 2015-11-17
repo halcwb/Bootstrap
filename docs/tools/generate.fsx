@@ -1,3 +1,6 @@
+#I "../../Scripts/"
+#load "Settings.fsx"
+
 // --------------------------------------------------------------------------------------
 // Builds the documentation from `.fsx` and `.md` files in the 'docs/content' directory
 // (the generated documentation is stored in the 'docs/output' directory)
@@ -9,11 +12,11 @@
 // for binaries output to root bin folder please add the filename only to the 
 // referenceBinaries list below in order to generate documentation for the binaries.
 // (This is the original behaviour of ProjectScaffold prior to multi project support)
-let projectName = "Bootstrap"
-let gitHome = "halcwb"
-let gitLink = projectName + ".git"
-let summary = ""
-let author  = gitHome
+let projectName = Settings.project
+let gitHome = Settings.gitOwner
+let gitLink = Settings.gitName
+let summary = Settings.summary
+let author  = Settings.gitOwner
 
 
 let referenceBinaries = []

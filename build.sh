@@ -20,8 +20,11 @@ function run() {
     "$@"
   fi
 }
-
-run .paket/paket.bootstrapper.exe
+#Only run the bootstrapper if no paket.exe
+if [ ! -e .paket/paket.exe ]
+	then
+		run .paket/paket.bootstrapper.exe
+fi
 
 if [[ "$OS" != "Windows_NT" ]] &&
        [ ! -e ~/.config/.mono/certs ]
@@ -32,6 +35,6 @@ fi
 run .paket/paket.exe restore
 
 [ ! -e build.fsx ] && run .paket/paket.exe update
-[ ! -e build.fsx ] && run packages/FAKE/tools/FAKE.exe init.fsx
+
 run packages/FAKE/tools/FAKE.exe "$@" $FSIARGS build.fsx
 

@@ -1,0 +1,23 @@
+Bootstrap Scaffold setup
+
+Minimum Marketing Features:
+- Bootstraps all dependencies
+- Builds on both Linux and Windows environments
+- Runs tests
+- Creates docs
+- Automates CI
+- Automates deployment
+
+User Stories:
+- User can set all project specific vars in one script
+
+Engineering tasks:
+
+
+To Do on current task:
+- Centralize all build en docs settings (remove duplicate code)
+- Put all scripting dependencies in one script file (remove duplicate code)
+- Update the index.fsx
+
+Future ideas:
+- Use local git settings to fill in project name etc..

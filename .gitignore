@@ -8,6 +8,9 @@
 # Add license
 !LICENSE.txt
 
+# Add todo list
+!ToDo.txt
+
 # Add md files
 !*.md
 
