@@ -30,6 +30,8 @@ Mono | .NET
 
 Note that the included `.gitignore` file uses an 'opt-in' approach, i.e. all files are ignored unless specifically included are 'unignored' in the `.gitignore` file. This prevents accidental inclusion of files in the git repository.
 
+The project can be downloaded by the command line `curl -L -o master.zip http://github.com/halcwb/Bootstrap/master.zip` and extracted with `unzip master.zip` and `mv Bootstrap-master/* Bootstrap/.* .`. After which the `master.zip` and the `Bootstrap-master` can be deleted. Don't forget to update the `scripts/Settings.fsx` file.
+
 
 ## Building
 The build can be started by running:

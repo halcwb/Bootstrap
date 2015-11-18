@@ -52,4 +52,5 @@
 !/docs/tools/templates/
 !/docs/tools/templates/*.cshtml
 !/docs/files/
+!/docs/files/img/
 !/docs/files/img/*.png
