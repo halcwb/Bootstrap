@@ -6,7 +6,7 @@ shallow_clone: true
 before_build:
 
 build_script:
-  - build.cmd
+  - build.cmd runtests
 
 test: off
 
